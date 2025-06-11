@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Факти про собак</title>
+    
+    <!-- Критичний CSS вбудований -->
+    <style>
+        /* Критичні стилі для видимої частини сторінки */
+        body { font-family: sans-serif; margin: 0; }
+        header { background: #f8f8f8; padding: 20px; }
+        h1 { margin: 0; color: #333; }
+    </style>
+    
+    <!-- Preload для важливих ресурсів -->
+    <link rel="preload" href="styles.min.css" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" as="style">
+    <link rel="preload" href="hero-large.webp" as="image">
+    
+    <!-- Відкладене завантаження CSS -->
+    <link rel="stylesheet" href="styles.min.css" media="print" onload="this.media='all'">
+    
+    <!-- Preconnect до сторонніх доменів -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Асинхронне завантаження шрифтів -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" 
+          rel="stylesheet" media="print" onload="this.media='all'">
+    
+    <!-- Асинхронне завантаження JavaScript -->
+    <script src="analytics.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Факти про собак</h1>
+    </header>
+    
+    <main>
+        <section class="hero">
+            <!-- Оптимізоване зображення з lazy loading -->
+            <img src="C:\Users\Al6\OneDrive\Робочий стіл\Лабораторна робота №9. Покращення продуктивності веб-сторінки\dog-1194083_640.jpg" 
+                 loading="lazy" 
+                 alt="Головне зображення"
+                 width="1200" 
+                 height="600">
+        </section>
+        
+        <section class="content">
+            <article>
+                <h2> Собаки здатні розпізнавати емоції людини</h2>
+                <!-- Зображення з відкладеним завантаженням -->
+                <img src="C:\Users\Al6\OneDrive\Робочий стіл\Лабораторна робота №9. Покращення продуктивності веб-сторінки\dog-1194087_640.jpg"
+                     data-src="article1.webp" 
+                     loading="lazy"
+                     class="lazyload"
+                     alt="Зображення статті 1"
+                     width="600"
+                     height="400">
+                <p>Чи знали ви, що собаки – це єдині тварини, здатні розпізнавати людські емоції. Вони з легкістю, лише на погляд, можуть визначити, сумуєте ви або радієте, злитесь, а може, спантеличені чимось. Ці милі вихованці навіть можуть співпереживати своєму господареві, переймаючи його почуття на себе.
+Детальніше на сайті https://e-zoo.com.ua/ua/blog/novosti/12-udivitelnykh-faktov-o-sobakakh E-ZOO</p>
+            </article>
+            
+            <article>
+                <h2>Собаки мають унікальні відбитки носів</h2>
+                <img src="C:\Users\Al6\OneDrive\Робочий стіл\Лабораторна робота №9. Покращення продуктивності веб-сторінки\puppy-1047521_640.jpg"
+                     data-src="article2.webp" 
+                     loading="lazy"
+                     class="lazyload"
+                     alt="Зображення статті 2"
+                     width="600"
+                     height="400">
+                <p>Носи у собак служать не тільки для нюху, а й для ідентифікації, наче відбитки пальців у людини. Тому, якщо собака була використана під час якогось злочину, криміналісти зможуть з легкістю вирахувати це.
+Детальніше на сайті https://e-zoo.com.ua/ua/blog/novosti/12-udivitelnykh-faktov-o-sobakakh E-ZOO</p>
+            </article>
+        </section>
+    </main>
+    
+    <!-- Відкладене завантаження контенту -->
+    <div id="recommendations" data-src="recommendations.html"></div>
+    
+    <!-- Основной JavaScript загружается в конце с атрибутом defer -->
+    <script src="main.min.js" defer></script>
+    
+    <!-- Скрипт для lazy loading -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Завантаження відкладених зображень
+            if ('IntersectionObserver' in window) {
+                const lazyImages = [].slice.call(document.querySelectorAll("img.lazyload"));
+                
+                let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            let lazyImage = entry.target;
+                            lazyImage.src = lazyImage.dataset.src;
+                            lazyImage.classList.remove("lazyload");
+                            lazyImageObserver.unobserve(lazyImage);
+                        }
+                    });
+                });
+                
+                lazyImages.forEach(function(lazyImage) {
+                    lazyImageObserver.observe(lazyImage);
+                });
+            }
+            
+            // Завантаження відкладеного контенту
+            const recommendations = document.getElementById('recommendations');
+            if (recommendations && recommendations.dataset.src) {
+                fetch(recommendations.dataset.src)
+                    .then(response => response.text())
+                    .then(data => {
+                        recommendations.innerHTML = data;
+                    });
+            }
+        });
+    </script>
+</body>
+</html>
